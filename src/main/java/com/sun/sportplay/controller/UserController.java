@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.sun.sportplay.bean.QueryInfo;
 import com.sun.sportplay.bean.User;
 import com.sun.sportplay.dao.UserDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -31,5 +34,36 @@ public class UserController {
         return res_string;
 
 
+    }
+    @RequestMapping("/userstate")
+    public String updateUserState(@RequestParam("id")Integer id,
+                                  @RequestParam("state")Boolean state){
+        int i = udao.updateState(id, state);
+        return i > 0 ? "success":"error";
+    }
+    @RequestMapping("/addUser")
+    public String addUSer(@RequestBody User user){
+        user.setRole("普通用户");
+        user.setState(false);
+        int i = udao.addUser(user);
+        return i > 0?"success":"error";
+    }
+    @RequestMapping("/deleteUser")
+    public String deleteUser(int id){
+        int i = udao.deleteUser(id);
+        return i > 0?"success":"error";
+    }
+
+    @RequestMapping("/getupdate")
+    public String getUpdateUser(int id){
+        User user = udao.getUpdateUser(id);
+        String string = JSON.toJSONString(user);
+        return string;
+    }
+
+    @RequestMapping("/edituser")
+    public String editUser(@RequestBody User user){
+        int i = udao.editUser(user);
+        return i >0?"success":"error";
     }
 }
